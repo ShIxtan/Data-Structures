@@ -15,7 +15,7 @@ class LinkedList
   end
 
   def push(value)
-    new_node = ListNode.new(value, self.last, @end)
+    new_node = ListNode.new(value, self.last, @end, self)
     self.last.child = new_node
     self.last = new_node
     @length += 1
@@ -44,10 +44,23 @@ class LinkedList
   end
 
   def unshift(value)
-    new_node = ListNode.new(value, @start, self.first)
+    new_node = ListNode.new(value, @start, self.first, self)
     self.first.parent = new_node
     self.first = new_node
     @length += 1
+  end
+
+  def insert(value, node = nil, direction = :after)
+    if node
+      if direction == :after
+        node.child = node.child.parent = new ListNode(value, node, node.child, self)
+      else
+        node.parent = node.parent.child = new ListNode(value, node.parent, node, self)
+      end
+      @length += 1
+    else
+      self.push(value)
+    end
   end
 
   private
@@ -66,9 +79,18 @@ end
 class ListNode
   attr_accessor :value, :parent, :child
 
-  def initialize(value = nil, parent = nil, child = nil)
+  def initialize(value = nil, parent = nil, child = nil, list = nil)
+    @list = list
     @parent = parent
     @child = child
     @value = value
+  end
+
+  def insert_after(value)
+    @list.insert(value, self, :after)
+  end
+
+  def insert_before(value)
+    @list.insert(value, self, :before)
   end
 end
