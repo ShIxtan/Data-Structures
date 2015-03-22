@@ -1,21 +1,20 @@
 class LinkedList
   def initialize()
-    @start = ListNode.new()
-    @end = ListNode.new()
-    self.last = @start
+    @sentinel = ListNode.new()
+    @sentinel.parent = @sentinel.child = @sentinel
     @length = 0
   end
 
   def last
-    length > 0 ? @end.parent : nil
+    length > 0 ? @sentinel.parent : nil
   end
 
   def first
-    length > 0 ? @start.child : nil
+    length > 0 ? @sentinel.child : nil
   end
 
   def push(value)
-    self.insert(value, @end, :before)
+    self.insert(value, @sentinel, :before)
   end
 
   def pop
@@ -37,10 +36,10 @@ class LinkedList
   end
 
   def unshift(value)
-    self.insert(value, @start)
+    self.insert(value, @sentinel)
   end
 
-  def insert(value, node = @last.parent, direction = :after)
+  def insert(value, node = @sentinel.parent, direction = :after)
     if direction == :after
       node.child = node.child.parent = new ListNode(value, node, node.child, self)
     else
@@ -76,18 +75,6 @@ class LinkedList
 
     node.value = value
     return value
-  end
-
-  private
-
-  def last=(node)
-     @end.parent = node
-     node.child = @end
-  end
-
-  def first=(node)
-    @start.child = node
-    node.parent = @start
   end
 end
 
