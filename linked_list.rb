@@ -1,3 +1,26 @@
+class ListNode
+  attr_accessor :value, :parent, :child
+
+  def initialize(value = nil, parent = nil, child = nil, list = nil)
+    @list = list
+    @parent = parent
+    @child = child
+    @value = value
+  end
+
+  def remove()
+    @list.remove(self)
+  end
+
+  def insert_after(value)
+    @list.insert(value, self, :after)
+  end
+
+  def insert_before(value)
+    @list.insert(value, self, :before)
+  end
+end
+
 class LinkedList
   def initialize()
     @sentinel = ListNode.new()
@@ -6,11 +29,11 @@ class LinkedList
   end
 
   def last
-    length > 0 ? @sentinel.parent : nil
+    @length > 0 ? @sentinel.parent : nil
   end
 
   def first
-    length > 0 ? @sentinel.child : nil
+    @length > 0 ? @sentinel.child : nil
   end
 
   def push(value)
@@ -41,9 +64,9 @@ class LinkedList
 
   def insert(value, node = @sentinel.parent, direction = :after)
     if direction == :after
-      node.child = node.child.parent = new ListNode(value, node, node.child, self)
+      node.child = node.child.parent = ListNode.new(value, node, node.child, self)
     else
-      node.parent = node.parent.child = new ListNode(value, node.parent, node, self)
+      node.parent = node.parent.child = ListNode.new(value, node.parent, node, self)
     end
     @length += 1
   end
@@ -62,7 +85,7 @@ class LinkedList
       node = node.child
     end
 
-    return node.value
+    return node
   end
 
   def []=(index, value)
@@ -75,28 +98,5 @@ class LinkedList
 
     node.value = value
     return value
-  end
-end
-
-class ListNode
-  attr_accessor :value, :parent, :child
-
-  def initialize(value = nil, parent = nil, child = nil, list = nil)
-    @list = list
-    @parent = parent
-    @child = child
-    @value = value
-  end
-
-  def remove()
-    @list.remove(self)
-  end
-
-  def insert_after(value)
-    @list.insert(value, self, :after)
-  end
-
-  def insert_before(value)
-    @list.insert(value, self, :before)
   end
 end
