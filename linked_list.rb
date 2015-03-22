@@ -22,18 +22,24 @@ class ListNode
 end
 
 class LinkedList
+  attr_reader :length
+
   def initialize()
     @sentinel = ListNode.new()
     @sentinel.parent = @sentinel.child = @sentinel
     @length = 0
   end
 
+  def empty?
+    @length == 0
+  end
+
   def last
-    @length > 0 ? @sentinel.parent : nil
+    empty? ? nil : @sentinel.parent
   end
 
   def first
-    @length > 0 ? @sentinel.child : nil
+    empty? ? nil : @sentinel.child
   end
 
   def push(value)
@@ -41,21 +47,11 @@ class LinkedList
   end
 
   def pop
-    if @length > 0
-      top = self.last
-      return self.remove(top).value
-    else
-      return nil
-    end
+    empty? ? nil : self.remove(self.last).value
   end
 
   def shift
-    if @length > 0
-      bottom = self.first
-      return self.remove(bottom).value
-    else
-      return nil
-    end
+    empty? ? nil : self.remove(self.first).value
   end
 
   def unshift(value)
