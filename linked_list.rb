@@ -15,52 +15,67 @@ class LinkedList
   end
 
   def push(value)
-    new_node = ListNode.new(value, self.last, @end, self)
-    self.last.child = new_node
-    self.last = new_node
-    @length += 1
+    self.insert(value, @end, :before)
   end
 
   def pop
-    if @length > 1
-      top = self.last.value
-      self.last = self.last.parent
-      @length -= 1
-      return top.value
+    if @length > 0
+      top = self.last
+      return self.remove(top).value
     else
       return nil
     end
   end
 
   def shift
-    if @length > 1
-      bottom = self.first.value
-      self.first = self.first.child
-      @length -= 1
-      return bottom.value
+    if @length > 0
+      bottom = self.first
+      return self.remove(bottom).value
     else
       return nil
     end
   end
 
   def unshift(value)
-    new_node = ListNode.new(value, @start, self.first, self)
-    self.first.parent = new_node
-    self.first = new_node
+    self.insert(value, @start)
+  end
+
+  def insert(value, node = @last.parent, direction = :after)
+    if direction == :after
+      node.child = node.child.parent = new ListNode(value, node, node.child, self)
+    else
+      node.parent = node.parent.child = new ListNode(value, node.parent, node, self)
+    end
     @length += 1
   end
 
-  def insert(value, node = nil, direction = :after)
-    if node
-      if direction == :after
-        node.child = node.child.parent = new ListNode(value, node, node.child, self)
-      else
-        node.parent = node.parent.child = new ListNode(value, node.parent, node, self)
-      end
-      @length += 1
-    else
-      self.push(value)
+  def remove(node)
+    node.child.parent, node.parent.child = node.parent.child, node.child.parent
+    @length -= 1
+    return node
+  end
+
+  def [](index)
+    return nil if index >= @length || index < 0
+    node = self.first
+
+    index.times do
+      node = node.child
     end
+
+    return node.value
+  end
+
+  def []=(index, value)
+    return nil if index >= @length || index < 0
+    node = self.first
+
+    index.times do
+      node = node.child
+    end
+
+    node.value = value
+    return value
   end
 
   private
@@ -84,6 +99,10 @@ class ListNode
     @parent = parent
     @child = child
     @value = value
+  end
+
+  def remove()
+    @list.remove(self)
   end
 
   def insert_after(value)
