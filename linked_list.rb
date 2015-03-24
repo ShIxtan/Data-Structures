@@ -86,13 +86,7 @@ class LinkedList
 
   def []=(index, value)
     return nil if index >= @length || index < 0
-    node = self.first
-
-    index.times do
-      node = node.child
-    end
-
-    node.value = value
+    self[index].value = value
     return value
   end
 end
